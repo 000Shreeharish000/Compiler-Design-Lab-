@@ -7,31 +7,31 @@
 ## 📁 Repository Structure
 
 ```
-CompilerDesign/
-├── Lab1_Lexical_Analyzer/
-│   ├── lexical_analyzer.py
-│   └── README.md
-├── Lab2_RE_to_NFA/
-│   ├── re_to_nfa.py
-│   └── README.md
-├── Lab3_NFA_to_DFA/
-│   ├── nfa_to_dfa.py
-│   └── README.md
-├── Lab4_Grammar_Transformations/
-│   ├── grammar_transformations.py
-│   └── README.md
-├── Lab5_FIRST_FOLLOW/
-│   ├── first_follow.py
-│   └── README.md
-├── Lab6_Predictive_Parsing/
-│   ├── predictive_parsing.py
-│   └── README.md
-├── Lab7_Shift_Reduce_Parsing/
-│   ├── shift_reduce.py
-│   └── README.md
-├── Lab8_Leading_Trailing/
-│   ├── leading_trailing.py
-│   └── README.md
+COMPILER-DESIGN-LAB-/
+├── Lab 1 Lexical analyzer/
+│   ├── lexical.py
+│   └── Readme.md
+├── Lab 2 conversion from Regular Expression to NFA/
+│   ├── Re_to_nfa.py
+│   └── Readme.md
+├── Lab 3 Conversion from NFA to DFA/
+│   ├── Nfa_dfa.py
+│   └── Readme.md
+├── Lab 4 Elimation of Ambiguity, Left Recursion and Left Factoring/
+│   ├── Lftrecursion.py
+│   └── Readme.md
+├── Lab 5 -FIRST AND FOLLOW computation/
+│   ├── First-follow-func.py
+│   └── Readme.md
+├── Lab 6 Predictive Parsing Table/
+│   ├── Parsetable.py
+│   └── Readme.md
+├── Lab 7 - Shift Reduce Parsing/
+│   ├── Shiftreduce.py
+│   └── Readme.md
+├── Lab 8- Computation of LEADING AND TRAILING/
+│   ├── lead&trailing.py
+│   └── Readme.md
 └── README.md  ← You are here
 ```
 
@@ -40,7 +40,7 @@ CompilerDesign/
 ## 🗂️ Lab Summary
 
 ### Lab 1 — Lexical Analyzer
-**File:** `lexical_analyzer.py`
+**File:** `lexical.py`
 
 The first phase of a compiler. Reads raw source code and breaks it into a stream of **tokens** — the smallest meaningful units of a program.
 
@@ -56,7 +56,7 @@ Output: KEYWORD(int)  IDENTIFIER(x)  OPERATOR(=)  INTEGER(10)  OPERATOR(+)  IDEN
 ---
 
 ### Lab 2 — Regular Expression to NFA
-**File:** `re_to_nfa.py`
+**File:** `Re_to_nfa.py`
 
 Converts a Regular Expression into a **Non-deterministic Finite Automaton (NFA)** using **Thompson's Construction Algorithm**.
 
@@ -72,7 +72,7 @@ Regex: (a|b)*abb
 ---
 
 ### Lab 3 — NFA to DFA
-**File:** `nfa_to_dfa.py`
+**File:** `Nfa_dfa.py`
 
 Converts an NFA to an equivalent **Deterministic Finite Automaton (DFA)** using the **Subset Construction (Powerset) Algorithm**.
 
@@ -88,8 +88,8 @@ Input 'abb' → ACCEPTED ✓
 
 ---
 
-### Lab 4 — Grammar Transformations
-**File:** `grammar_transformations.py`
+### Lab 4 — Elimination of Ambiguity, Left Recursion and Left Factoring
+**File:** `Lftrecursion.py`
 
 Prepares a Context-Free Grammar (CFG) for parsing by applying three transformations:
 
@@ -113,7 +113,7 @@ E -> E + T | T        →     E  -> T E'
 ---
 
 ### Lab 5 — FIRST and FOLLOW Sets
-**File:** `first_follow.py`
+**File:** `First-follow-func.py`
 
 Computes **FIRST** and **FOLLOW** sets for all non-terminals — the foundation for building LL(1) parsing tables.
 
@@ -131,7 +131,7 @@ T               { (, id }               { $, ), + }
 ---
 
 ### Lab 6 — Predictive Parsing Table (LL(1))
-**File:** `predictive_parsing.py`
+**File:** `Parsetable.py`
 
 Constructs the **LL(1) Predictive Parsing Table** and simulates top-down parsing.
 
@@ -151,7 +151,7 @@ $ E' T' id F                id + id * id $       F -> id
 ---
 
 ### Lab 7 — Shift-Reduce Parsing (SLR(1))
-**File:** `shift_reduce.py`
+**File:** `Shiftreduce.py`
 
 Implements a full **SLR(1) bottom-up parser** — builds the LR(0) automaton, constructs the parsing table, and simulates parsing.
 
@@ -172,7 +172,7 @@ $ 0 F 3                 + id $             Reduce by T -> F
 ---
 
 ### Lab 8 — LEADING and TRAILING Sets
-**File:** `leading_trailing.py`
+**File:** `lead&trailing.py`
 
 Computes **LEADING** and **TRAILING** sets for Operator Grammars, and derives **Operator Precedence Relations**.
 
@@ -202,17 +202,17 @@ No external dependencies — pure Python 3.
 ```bash
 # Clone the repo
 git clone <your-repo-url>
-cd CompilerDesign
+cd COMPILER-DESIGN-LAB-
 
 # Run any lab directly
-python Lab1_Lexical_Analyzer/lexical_analyzer.py
-python Lab2_RE_to_NFA/re_to_nfa.py
-python Lab3_NFA_to_DFA/nfa_to_dfa.py
-python Lab4_Grammar_Transformations/grammar_transformations.py
-python Lab5_FIRST_FOLLOW/first_follow.py         # has interactive input mode
-python Lab6_Predictive_Parsing/predictive_parsing.py
-python Lab7_Shift_Reduce_Parsing/shift_reduce.py
-python Lab8_Leading_Trailing/leading_trailing.py
+python "Lab 1 Lexical analyzer/lexical.py"
+python "Lab 2 conversion from Regular Expression to NFA/Re_to_nfa.py"
+python "Lab 3 Conversion from NFA to DFA/Nfa_dfa.py"
+python "Lab 4 Elimation of Ambiguity, Left Recursion and Left Factoring/Lftrecursion.py"
+python "Lab 5 -FIRST AND FOLLOW computation/First-follow-func.py"
+python "Lab 6 Predictive Parsing Table/Parsetable.py"
+python "Lab 7 - Shift Reduce Parsing/Shiftreduce.py"
+python "Lab 8- Computation of LEADING AND TRAILING/lead&trailing.py"
 ```
 
 **Requirements:** Python 3.6+, no pip installs needed.
