@@ -1,6 +1,6 @@
 # 🛠️ Compiler Design Lab — Complete Repository
 
-> Implementation of core Compiler Design concepts in Python, covering all phases from Lexical Analysis to Parsing.
+> Implementation of core Compiler Design concepts in Python, covering all phases from Lexical Analysis to Code Generation and Optimization.
 
 ---
 
@@ -31,6 +31,27 @@ COMPILER-DESIGN-LAB-/
 │   └── Readme.md
 ├── Lab 8- Computation of LEADING AND TRAILING/
 │   ├── lead&trailing.py
+│   └── Readme.md
+├── Lab 9 - Computation of LR(0) Items/
+│   ├── lr0items.py
+│   └── Readme.md
+├── Lab 10 - Intermediate Code Generation Postfix Prefix/
+│   ├── postfix_prefix.py
+│   └── Readme.md
+├── Lab 11 - Intermediate Code Generation Quadruple Triple/
+│   ├── quad_triple.py
+│   └── Readme.md
+├── Lab 12 - Simple Code Generator/
+│   ├── codegen.py
+│   └── Readme.md
+├── Lab 13 - Implementation of DAG/
+│   ├── dag.py
+│   └── Readme.md
+├── Lab 14 - Global Data Flow Analysis/
+│   ├── dataflow.py
+│   └── Readme.md
+├── Lab 15 - Storage Allocation Strategies/
+│   ├── storage_allocation.py
 │   └── Readme.md
 └── README.md  ← You are here
 ```
@@ -195,6 +216,148 @@ F               { (, id }            { ), id }
 
 ---
 
+### Lab 9 — Computation of LR(0) Items
+**File:** `lr0items.py`
+
+Computes the **canonical collection of LR(0) item sets** — the foundation for all LR parsers.
+
+- Augments the grammar with `S' -> S`
+- Builds all item sets using **closure** and **GOTO** operations
+- An LR(0) item tracks parsing progress with a dot `•` in productions
+- Prints every state and its transitions
+
+```
+I0:
+  E' -> • E
+  E  -> • E + T
+  E  -> • T
+  F  -> • id
+  GOTO(id) = I5,  GOTO(E) = I1 ...
+```
+
+---
+
+### Lab 10 — Intermediate Code: Postfix & Prefix
+**File:** `postfix_prefix.py`
+
+Converts infix expressions to **Postfix** (Reverse Polish Notation) and **Prefix** (Polish Notation) as intermediate representations.
+
+- Uses **Shunting-Yard algorithm** for postfix; reversed approach for prefix
+- Handles operator precedence and associativity (`^` right-associative)
+- Also evaluates numeric postfix expressions
+
+```
+Infix              Postfix          Prefix
+a + b * c          a b c * +        + a * b c
+(a+b) * (c-d)      a b + c d - *    * + a b - c d
+3 + 4 * 2  =  11
+```
+
+---
+
+### Lab 11 — Intermediate Code: Quadruple, Triple, Indirect Triple
+**File:** `quad_triple.py`
+
+Generates three standard forms of intermediate code from expressions.
+
+- **Quadruples** `(op, arg1, arg2, result)` — each instruction is self-contained
+- **Triples** `(op, arg1, arg2)` — result referenced by position index `(i)`
+- **Indirect Triples** — pointer table into the triples list, supports reordering
+
+```
+Expression: a + b * c
+
+Quadruples:          Triples:          Indirect Triples:
+(*, b, c, t1)        (0): *, b, c      ptr 0 → (0)
+(+, a, t1, t2)       (1): +, a, (0)    ptr 1 → (1)
+```
+
+---
+
+### Lab 12 — Simple Code Generator
+**File:** `codegen.py`
+
+Translates **Three-Address Code (TAC)** into assembly-like target code using register and address descriptors.
+
+- Maintains a **Register Descriptor** (which variable is in each register)
+- Maintains an **Address Descriptor** (where each variable lives)
+- Issues `LD`, `ST`, `ADD`, `SUB`, `MUL`, `DIV` instructions
+- Spills registers to memory when all are occupied
+
+```
+TAC: t1 = b * c,  t2 = a + t1
+
+Target Code:
+  LD  R0, b
+  LD  R1, c
+  MUL R2, R0, R1   ; t1 = b * c
+  LD  R0, a
+  ADD R3, R0, R2   ; t2 = a + t1
+```
+
+---
+
+### Lab 13 — Implementation of DAG
+**File:** `dag.py`
+
+Builds a **Directed Acyclic Graph (DAG)** for a basic block to detect and eliminate **common subexpressions**.
+
+- Leaf nodes = variables/constants; interior nodes = operators
+- Identical computations share the **same node** — computed only once
+- Prints DAG node table showing which variables point to each node
+
+```
+t1 = a + b
+t2 = a + b   ← same as t1, reuses node!
+t3 = t1 * t2
+
+DAG: only 4 nodes instead of 5 — one + node shared by t1 and t2
+```
+
+---
+
+### Lab 14 — Global Data Flow Analysis
+**File:** `dataflow.py`
+
+Implements **Reaching Definitions** analysis — a classical iterative global data flow algorithm.
+
+- Computes **GEN** (definitions generated) and **KILL** (definitions killed) per block
+- Iteratively computes **IN** and **OUT** sets until convergence
+- Works on any control flow graph (supports loops)
+
+```
+Block   GEN        KILL       IN              OUT
+B1      {d1,d2}    {d1,d2}    {}              {d1,d2}
+B2      {d3,d4}    {d3,d4}    {d1,d2,d3,d4}  {d1,d3,d4}
+B3      {d5}       {d5}       {d1,d3,d4}     {d1,d3,d4,d5}
+```
+
+---
+
+### Lab 15 — Storage Allocation Strategies
+**File:** `storage_allocation.py`
+
+Implements and demonstrates all three storage allocation strategies used in compilers — in a single file.
+
+- **Static Allocation** — fixed addresses assigned at compile time; no overhead, no recursion
+- **Stack Allocation** — activation records pushed/popped on call/return; supports recursion
+- **Heap Allocation** — dynamic `malloc`/`free` with first-fit free list and block coalescing
+
+| Feature | Static | Stack | Heap |
+|---|---|---|---|
+| Allocation time | Compile time | Runtime (call) | Runtime (explicit) |
+| Supports recursion | ✗ | ✓ | ✓ |
+| Fragmentation | None | None | Possible |
+
+```
+Heap: malloc(20) → block #1 at addr 0
+      malloc(15) → block #2 at addr 20
+      free(#2)   → coalesced back into free list
+      malloc(10) → reuses freed space
+```
+
+---
+
 ## ⚙️ How to Run Any Lab
 
 No external dependencies — pure Python 3.
@@ -213,6 +376,13 @@ python "Lab 5 -FIRST AND FOLLOW computation/First-follow-func.py"
 python "Lab 6 Predictive Parsing Table/Parsetable.py"
 python "Lab 7 - Shift Reduce Parsing/Shiftreduce.py"
 python "Lab 8- Computation of LEADING AND TRAILING/lead&trailing.py"
+python "Lab 9 - Computation of LR(0) Items/lr0items.py"
+python "Lab 10 - Intermediate Code Generation Postfix Prefix/postfix_prefix.py"
+python "Lab 11 - Intermediate Code Generation Quadruple Triple/quad_triple.py"
+python "Lab 12 - Simple Code Generator/codegen.py"
+python "Lab 13 - Implementation of DAG/dag.py"
+python "Lab 14 - Global Data Flow Analysis/dataflow.py"
+python "Lab 15 - Storage Allocation Strategies/storage_allocation.py"
 ```
 
 **Requirements:** Python 3.6+, no pip installs needed.
@@ -224,21 +394,35 @@ python "Lab 8- Computation of LEADING AND TRAILING/lead&trailing.py"
 ```
 Source Code
     ↓
-[Lab 1]  Lexical Analyzer        →  Token Stream
+[Lab 1]  Lexical Analyzer          →  Token Stream
     ↓
-[Lab 2]  RE → NFA                →  NFA (Thompson's Construction)
+[Lab 2]  RE → NFA                  →  NFA (Thompson's Construction)
     ↓
-[Lab 3]  NFA → DFA               →  DFA (Subset Construction)
+[Lab 3]  NFA → DFA                 →  DFA (Subset Construction)
     ↓
-[Lab 4]  Grammar Transformations →  Clean CFG (no ambiguity / left recursion)
+[Lab 4]  Grammar Transformations   →  Clean CFG (no ambiguity / left recursion)
     ↓
-[Lab 5]  FIRST & FOLLOW          →  Sets needed for parsing tables
+[Lab 5]  FIRST & FOLLOW            →  Sets needed for parsing tables
     ↓
-[Lab 6]  Predictive Parsing      →  LL(1) Table + Top-down Parser
+[Lab 6]  Predictive Parsing        →  LL(1) Table + Top-down Parser
     ↓
-[Lab 7]  Shift-Reduce Parsing    →  SLR(1) Table + Bottom-up Parser
+[Lab 7]  Shift-Reduce Parsing      →  SLR(1) Table + Bottom-up Parser
     ↓
-[Lab 8]  LEADING & TRAILING      →  Operator Precedence Relations
+[Lab 8]  LEADING & TRAILING        →  Operator Precedence Relations
+    ↓
+[Lab 9]  LR(0) Items               →  Canonical Item Sets for LR Parsing
+    ↓
+[Lab 10] Postfix / Prefix          →  Intermediate Representation
+    ↓
+[Lab 11] Quadruple / Triple        →  Three-Address Code Forms
+    ↓
+[Lab 12] Code Generator            →  Assembly-like Target Code
+    ↓
+[Lab 13] DAG                       →  Common Subexpression Elimination
+    ↓
+[Lab 14] Data Flow Analysis        →  Reaching Definitions (Global Optimisation)
+    ↓
+[Lab 15] Storage Allocation        →  Static / Stack / Heap Memory Management
 ```
 
 ---
